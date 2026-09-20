@@ -1,0 +1,43 @@
+[package]
+name = "kiwimanga"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Personal Telegram bot for downloading manga chapters/volumes (MangaDex, RanobeLib)"
+license = "MIT"
+
+[[bin]]
+name = "kiwimanga"
+path = "src/main.rs"
+
+[lib]
+name = "kiwimanga"
+path = "src/lib.rs"
+
+[dependencies]
+# Telegram framework. default-features=false + rustls => no OpenSSL needed.
+teloxide = { version = "0.12", default-features = false, features = ["rustls", "ctrlc_handler", "auto-send"] }
+tokio = { version = "1", features = ["full"] }
+# rustls only => no OpenSSL needed.
+reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+sqlx = { version = "0.8", features = ["sqlite", "migrate", "runtime-tokio"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tracing = "0.1"
+# NOTE: extra crate beyond the task's base list, justified in REPORT.md
+# (tracing alone cannot emit logs; this is its official subscriber).
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+zip = "2.2"
+epub-builder = "0.8"
+whatlang = "0.18"
+moka = { version = "0.12", features = ["future"] }
+dotenvy = "0.15"
+
+[dev-dependencies]
+# NOTE: extra dev-only crate, required by the task's own verification section
+# ("backoff 429 (wiremock)"). Justified in REPORT.md.
+wiremock = "0.6"
+
+[profile.release]
+opt-level = 3
